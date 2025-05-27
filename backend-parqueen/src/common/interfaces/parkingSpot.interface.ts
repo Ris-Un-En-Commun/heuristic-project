@@ -2,5 +2,6 @@
 export interface ParkingSpot {
     id : String;
     isElectric : boolean;
-    isOccuper : boolean;
+    isOccuped : boolean;
+    isUnvailable : boolean;
 }
