@@ -28,6 +28,8 @@ services:
       - DB_USER=${POSTGRES_USER:-postgres}
       - DB_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - PORT=${BACKEND_PORT:-8080}
+    networks:
+      - parqueen-network
 
   postgres:
     image: postgres:15-alpine
@@ -39,8 +41,13 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - parqueen-network
 
 volumes:
   postgres_data:
     driver: local
 
+networks:
+  parqueen-network:
+    driver: bridge
