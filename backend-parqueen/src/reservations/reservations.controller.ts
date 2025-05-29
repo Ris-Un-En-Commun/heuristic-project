@@ -18,7 +18,7 @@ export class ReservationsController {
     }
 
     @Post()
-    async create(@Body() createReservationDto: CreateReservationDto) : Promise <Reservation> {
+    async create(@Body() createReservationDto: CreateReservationDto) : Promise <Reservation| Reservation[]> {
         return this.reservationsService.create(createReservationDto); 
 
     }

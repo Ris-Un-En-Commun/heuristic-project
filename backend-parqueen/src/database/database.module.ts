@@ -22,6 +22,7 @@ import { Reservation } from '../reservations/entities/reservation.entity';
         database: config.get<string>('POSTGRES_DB'),
         entities: [User, Reservation, ParkingSpot],
         synchronize: true,
+
       }),
     }),
   ],
