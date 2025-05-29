@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-type UserRole = 'admin' | 'employee' | 'manager';
+export type UserRole = 'admin' | 'employee' | 'manager';
 
 
 export function setupAxiosClient(role: UserRole): void {

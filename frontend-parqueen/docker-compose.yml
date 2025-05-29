@@ -1,53 +1,38 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "${FRONTEND_PORT:-3000}:80"
-    depends_on:
-      - backend
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: unless-stopped
     environment:
-      - VITE_API_URL=${API_URL:-http://localhost:8080}
-    networks:
-      - parqueen-network
-
-  backend:
-    build:
-      context: ../back
-    ports:
-      - "${BACKEND_PORT:-8080}:8080"
-    depends_on:
-      - postgres
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=${POSTGRES_DB:-parqueen}
-      - DB_USER=${POSTGRES_USER:-postgres}
-      - DB_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - PORT=${BACKEND_PORT:-8080}
-    networks:
-      - parqueen-network
-
-  postgres:
-    image: postgres:15-alpine
+      POSTGRES_USER: '${POSTGRES_USER:-postgres}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD:-postgres}'
+      POSTGRES_DB: '${POSTGRES_DB:-parqueen}'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB:-parqueen}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - pgdata:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    networks:
-      - parqueen-network
+      - '${DB_PORT:-5432}:5432'
+
+  api:
+    env_file:
+      - .env
+    build:
+      context: ../backend-parqueen
+      dockerfile: Dockerfile
+    container_name: nest_api
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: '${DB_PORT:-5432}'
+      DATABASE_USER: '${POSTGRES_USER:-postgres}'
+      DATABASE_PASSWORD: '${POSTGRES_PASSWORD:-postgres}'
+      DATABASE_NAME: '${POSTGRES_DB:-parqueen}'
+    command: sh -c "npx wait-on tcp:db:5432 && npm run start:prod"
+    ports:
+      - '${BACKEND_PORT:-3000}:3000'
+
 
 volumes:
-  postgres_data:
-    driver: local
-
-networks:
-  parqueen-network:
-    driver: bridge
+  pgdata:
