@@ -1,11 +1,21 @@
 import './App.css'
+import Header from "./components/ui/Header.tsx";
+import ReserveParkingSpot from "./components/reservation/reserve_parking_spot.tsx";
+import {Toaster} from "react-hot-toast";
+import {useEffect} from "react";
+import {setupAxiosClient} from "./api/setupAxiosClient.ts";
 
 function App() {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    useEffect(() => {
+        setupAxiosClient('admin',)
+    }, []);
     return (
         <>
-            <h1>Vite is running in {import.meta.env.MODE}</h1>
-            <p>Using data from {backendUrl}</p>
+            <Toaster/>
+            <Header/>
+            <main className="m-auto my-0 px-8">
+                <ReserveParkingSpot/>
+            </main>
         </>
     )
 }
