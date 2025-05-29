@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';
+import { Reservation } from '../reservations/entities/reservation.entity';
+import { format, addDays, isBefore,getDay } from 'date-fns';
 
 
 @Injectable()
@@ -9,6 +11,9 @@ export class ParkingSpotsService {
       constructor(
         @InjectRepository(ParkingSpot)
         private parkingSpotRepository: Repository<ParkingSpot>,
+
+        @InjectRepository(Reservation)
+        private reservationRepository: Repository<Reservation>
       ) {}
 
 
@@ -16,6 +21,43 @@ export class ParkingSpotsService {
         const parkingSpot = this.parkingSpotRepository.create(createParkingSpotDto);
         return this.parkingSpotRepository.save(parkingSpot);
     }
+
+
+async checkAvailability(isElectric: boolean, startDate: string, endDate: string): Promise<boolean> {
+  const allSpots = await this.parkingSpotRepository.find({
+    where: isElectric ? { isElectric: true } : {},
+  });
+
+  if (allSpots.length === 0) return false;
+
+  const spotIds = allSpots.map(spot => spot.id);
+
+  const dates: string[] = [];
+  let current = new Date(startDate);
+  const end = new Date(endDate);
+
+  while (!isBefore(end, current)) {
+    const day = getDay(current);
+    if (day >= 1 && day <= 5) {
+      dates.push(format(current, 'yyyy-MM-dd'));
+    }
+    current = addDays(current, 1);
+  }
+
+  for (const date of dates) {
+      const reservationsCount = await this.reservationRepository
+        .createQueryBuilder('reservation')
+        .where(':date BETWEEN reservation.startDate AND reservation.endDate', { date })
+        .andWhere('reservation.parkingSpotId IN (:...spotIds)', { spotIds })
+        .getCount();
+
+    if (reservationsCount >= allSpots.length) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 
 
