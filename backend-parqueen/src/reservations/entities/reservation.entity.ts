@@ -14,10 +14,7 @@ export class Reservation {
   parkingSpot: ParkingSpot;
 
   @Column({ type: 'date' })
-  startDate: string;
-
-  @Column({ type: 'date' })
-  endDate: string;
+  date: string; 
 
   @Column({ default: false })
   checkedIn: boolean;
