@@ -22,7 +22,7 @@ services:
 #    depends_on:
 #      - db
 #    environment:
-#      DATABASE_HOST: db
+#      DATABASE_HOST: dopb
 #      DATABASE_PORT: '${DB_PORT:-5432}:5432'
 #      DATABASE_USER: '${POSTGRES_USER:-postgres}'
 #      DATABASE_PASSWORD: '${POSTGRES_PASSWORD:-postgres}'

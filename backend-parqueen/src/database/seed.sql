@@ -1,0 +1,80 @@
+INSERT INTO public."user" (id, name, email, password, role)
+VALUES ('6fddc186-2a59-4a8b-9a89-23e46f96cf85', 'David Dupuis', 'david.dupuis@example.com', 'hashed_password1', 'user'),
+       ('2c8a0b1e-0aa6-4e8a-bb34-74d144d2266b', 'Julie Martin', 'julie.martin@example.com', 'hashed_password2', 'user');
+
+INSERT INTO public."user" (id, name, email, password, role)
+VALUES ('eb2b07f4-bd65-4e7d-98f8-189d11f2f0c0', 'Karim Bensalem', 'karim.bensalem@example.com', 'hashed_password3',
+        'admin'),
+       ('b29c2bc0-24d6-4191-94a6-712c7c0c3c0e', 'Nadia Roux', 'nadia.roux@example.com', 'hashed_password4', 'admin');
+
+INSERT INTO public."user" (id, name, email, password, role)
+VALUES ('51e3145b-2fcd-4d7d-99a5-8ffb137dc610', 'Laura Michel', 'laura.michel@example.com', 'hashed_password5',
+        'manager'),
+       ('bd96247f-60b5-4db9-9ea3-81275ab986d4', 'Thomas Garnier', 'thomas.garnier@example.com', 'hashed_password6',
+        'manager');
+INSERT INTO public.parking_spot (label, "isElectric", "isOccupied")
+VALUES ('A01', true, false),
+       ('A02', true, false),
+       ('A03', true, false),
+       ('A04', true, false),
+       ('A05', true, false),
+       ('A06', true, false),
+       ('A07', true, false),
+       ('A08', true, false),
+       ('A09', true, false),
+       ('A10', true, false),
+
+       ('B01', false, false),
+       ('B02', false, false),
+       ('B03', false, false),
+       ('B04', false, false),
+       ('B05', false, false),
+       ('B06', false, false),
+       ('B07', false, false),
+       ('B08', false, false),
+       ('B09', false, false),
+       ('B10', false, false),
+
+       ('C01', false, false),
+       ('C02', false, false),
+       ('C03', false, false),
+       ('C04', false, false),
+       ('C05', false, false),
+       ('C06', false, false),
+       ('C07', false, false),
+       ('C08', false, false),
+       ('C09', false, false),
+       ('C10', false, false),
+
+       ('D01', false, false),
+       ('D02', false, false),
+       ('D03', false, false),
+       ('D04', false, false),
+       ('D05', false, false),
+       ('D06', false, false),
+       ('D07', false, false),
+       ('D08', false, false),
+       ('D09', false, false),
+       ('D10', false, false),
+
+       ('E01', false, false),
+       ('E02', false, false),
+       ('E03', false, false),
+       ('E04', false, false),
+       ('E05', false, false),
+       ('E06', false, false),
+       ('E07', false, false),
+       ('E08', false, false),
+       ('E09', false, false),
+       ('E10', false, false),
+
+       ('F01', true, false),
+       ('F02', true, false),
+       ('F03', true, false),
+       ('F04', true, false),
+       ('F05', true, false),
+       ('F06', true, false),
+       ('F07', true, false),
+       ('F08', true, false),
+       ('F09', true, false),
+       ('F10', true, false);
