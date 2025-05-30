@@ -1,12 +1,18 @@
 import './App.css'
+import Header from "./components/ui/Header.tsx";
+import ReserveParkingSpot from "./components/reservation/reserve_parking_spot.tsx";
+import {Toaster} from "react-hot-toast";
+import {RoleProvider} from "./lib/contexts/authentication/RoleContext.tsx";
 
 function App() {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     return (
-        <>
-            <h1>Vite is running in {import.meta.env.MODE}</h1>
-            <p>Using data from {backendUrl}</p>
-        </>
+        <RoleProvider initialRole="employee">
+            <Toaster/>
+            <Header/>
+            <main className="m-auto my-0 px-8">
+                <ReserveParkingSpot/>
+            </main>
+        </RoleProvider>
     )
 }
 

@@ -10,5 +10,4 @@ export interface Reservation {
     checkedIn : boolean;
     createdAt : Date;
     updatedAt : Date;
-
 }
