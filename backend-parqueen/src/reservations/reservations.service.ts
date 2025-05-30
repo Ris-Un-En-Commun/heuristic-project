@@ -1,14 +1,13 @@
-import { Injectable, NotFoundException, forwardRef } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reservation } from './entities/reservation.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { User } from '../users/entities/user.entity';
-import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';  
-import { addDays, format, isAfter, isToday, parseISO,isWeekend } from 'date-fns';
+import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';
+import { addDays, format, isAfter, isToday, isWeekend, parseISO } from 'date-fns';
 import { ParkingSpotsService } from '../parking-spots/parking-spots.service';
-import { Inject } from '@nestjs/common';
 
 @Injectable()
 export class ReservationsService {
@@ -17,22 +16,14 @@ export class ReservationsService {
   constructor(
     @InjectRepository(Reservation)
     private reservationRepo: Repository<Reservation>,
-
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
     @InjectRepository(ParkingSpot)
     private parkingSpotRepository: Repository<ParkingSpot>,
-    
-
-    @Inject(forwardRef(() => ParkingSpotsService)) 
+    @Inject(forwardRef(() => ParkingSpotsService))
     private parkingSpotsService: ParkingSpotsService,
-
-    
-
-  ) {}
-
-
+  ) {
+  }
 
 
   async findAll(): Promise<Reservation[]> {
@@ -40,83 +31,77 @@ export class ReservationsService {
   }
 
 
-
   async create(dto: CreateReservationDto): Promise<Reservation[]> {
-  const { userId, startDate, endDate, isElectric } = dto;
+    const { userId, startDate, endDate, isElectric } = dto;
 
-  const user = await this.userRepository.findOne({ where: { id: userId } });
-  if (!user) {
-    throw new NotFoundException(`Utilisateur avec id ${userId} non trouvé`);
-  }
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`Utilisateur avec id ${userId} non trouvé`);
+    }
 
-  const start = parseISO(startDate);
-  const end = parseISO(endDate);
-  const now = new Date();
-  const reservations: Reservation[] = [];
+    const start = parseISO(startDate);
+    const end = parseISO(endDate);
+    const now = new Date();
+    const reservations: Reservation[] = [];
 
-  for (let current = start; !isAfter(current, end); current = addDays(current, 1)) {
-    if (isWeekend(current)) continue;
+    for (let current = start; !isAfter(current, end); current = addDays(current, 1)) {
+      if (isWeekend(current)) continue;
 
-    const dateStr = format(current, 'yyyy-MM-dd');
+      const dateStr = format(current, 'yyyy-MM-dd');
 
     const availableSpot = await this.parkingSpotsService.getAvailableSpotForDate(isElectric, dateStr);
     if (!availableSpot) {
       throw new NotFoundException(`Aucune place disponible pour le ${dateStr}`);
     }
 
-    const checkedIn = isToday(current) && now.getHours() >= 11;
+      const checkedIn = isToday(current) && now.getHours() >= 11;
 
-    const reservation = this.reservationRepo.create({
-      user,
-      parkingSpot: availableSpot,
-      date: dateStr,
-      checkedIn,
-    });
+      const reservation = this.reservationRepo.create({
+        user,
+        parkingSpot: availableSpot,
+        date: dateStr,
+        checkedIn,
+      });
 
-    reservations.push(reservation);
-  }
-
-  return this.reservationRepo.save(reservations);
-}
-
-
-
-async update(id: string, dto: UpdateReservationDto): Promise<Reservation> {
-  const reservation = await this.reservationRepo.findOne({ where: { id } });
-  if (!reservation) {
-    throw new NotFoundException(`Reservation with id ${id} not found`);
-  }
-
-  if (dto.userId) {
-    const user = await this.userRepository.findOne({ where: { id: dto.userId } });
-    if (!user) {
-      throw new NotFoundException(`Utilisateur avec id ${dto.userId} non trouvé`);
+      reservations.push(reservation);
     }
-    reservation.user = user;
+
+    return this.reservationRepo.save(reservations);
   }
 
-  if (dto.parkingSpotId) {
-    const parkingSpot = await this.parkingSpotRepository.findOne({ where: { id: dto.parkingSpotId } });
-    if (!parkingSpot) {
-      throw new NotFoundException(`Place de parking avec id ${dto.parkingSpotId} non trouvée`);
+
+  async update(id: string, dto: UpdateReservationDto): Promise<Reservation> {
+    const reservation = await this.reservationRepo.findOne({ where: { id } });
+    if (!reservation) {
+      throw new NotFoundException(`Reservation with id ${id} not found`);
     }
-    reservation.parkingSpot = parkingSpot;
+
+    if (dto.userId) {
+      const user = await this.userRepository.findOne({ where: { id: dto.userId } });
+      if (!user) {
+        throw new NotFoundException(`Utilisateur avec id ${dto.userId} non trouvé`);
+      }
+      reservation.user = user;
+    }
+
+    if (dto.parkingSpotId) {
+      const parkingSpot = await this.parkingSpotRepository.findOne({ where: { id: dto.parkingSpotId } });
+      if (!parkingSpot) {
+        throw new NotFoundException(`Place de parking avec id ${dto.parkingSpotId} non trouvée`);
+      }
+      reservation.parkingSpot = parkingSpot;
+    }
+
+    if (dto.date) {
+      reservation.date = dto.date;
+    }
+
+    if (typeof dto.checkedIn === 'boolean') {
+      reservation.checkedIn = dto.checkedIn;
+    }
+
+    return this.reservationRepo.save(reservation);
   }
-
-  if (dto.date) {
-    reservation.date = dto.date;
-  }
-
-  if (typeof dto.checkedIn === 'boolean') {
-    reservation.checkedIn = dto.checkedIn;
-  }
-
-  return this.reservationRepo.save(reservation);
-}
-
-
-
-
 
 
   async remove(id: string): Promise<void> {
@@ -124,7 +109,16 @@ async update(id: string, dto: UpdateReservationDto): Promise<Reservation> {
   }
 
 
+  async checkIn(id: string): Promise<{ message: string }> {
+    const reservation = await this.reservationRepo.findOne({ where: { id } });
 
+    if (!reservation) {
+      throw new NotFoundException(`Réservation avec id ${id} non trouvée`);
+    }
 
+    reservation.checkedIn = true;
+    await this.reservationRepo.save(reservation);
+    return { message: `Check-in effectué'}` };
+  }
 
 }

@@ -14,12 +14,12 @@ export class ReservationsController {
                 }
     @Get()
     async findAll() {
-        return this.reservationsService.findAll(); 
+        return this.reservationsService.findAll();
     }
 
     @Post()
     async create(@Body() createReservationDto: CreateReservationDto) : Promise <Reservation| Reservation[]> {
-        return this.reservationsService.create(createReservationDto); 
+        return this.reservationsService.create(createReservationDto);
 
     }
     @Put(':id')
@@ -28,9 +28,14 @@ export class ReservationsController {
     }
 
     @Delete(':id')
-    @HttpCode(204) 
+    @HttpCode(204)
     async remove(@Param('id') id: string): Promise<void> {
         return this.reservationsService.remove(id);
+    }
+
+    @Patch(':id/check-in')
+    async checkIn(@Body('id') id: string): Promise<{ message: string}> {
+        return this.reservationsService.checkIn(id);
     }
 }
 
