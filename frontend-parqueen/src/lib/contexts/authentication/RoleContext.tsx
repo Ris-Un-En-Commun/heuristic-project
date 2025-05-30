@@ -14,7 +14,7 @@ type RoleProviderProps = {
 };
 
 export const RoleProvider: React.FC<RoleProviderProps> = ({
-                                                              initialRole = 'employee',
+                                                              initialRole = 'user',
                                                               children,
                                                           }) => {
     const [role, setRoleState] = useState<UserRole>(initialRole);
