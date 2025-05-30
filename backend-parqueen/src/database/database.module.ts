@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { User } from '../users/entities/user.entity';
-import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';
+import { ParkingSpot } from '../parking/domain/model/parking-spot.entity';
 import { Reservation } from '../reservations/entities/reservation.entity';
 
 

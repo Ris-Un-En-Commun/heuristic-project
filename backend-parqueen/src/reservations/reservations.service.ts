@@ -5,9 +5,9 @@ import { Reservation } from './entities/reservation.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { User } from '../users/entities/user.entity';
-import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';
+import { ParkingSpot } from '../parking/domain/model/parking-spot.entity';
 import { addDays, format, isAfter, isToday, isWeekend, parseISO } from 'date-fns';
-import { ParkingSpotsService } from '../parking-spots/parking-spots.service';
+import { ParkingSpotsService } from '../parking/parking-spots/services/parking-spots.service';
 import { BadRequestException } from '@nestjs/common';
 import { MoreThanOrEqual } from 'typeorm';
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';
-import { Reservation } from '../reservations/entities/reservation.entity';
+import { ParkingSpot } from '../../domain/model/parking-spot.entity';
+import { Reservation } from '../../../reservations/entities/reservation.entity';
 import { format, addDays, isBefore,getDay } from 'date-fns';
 
 
