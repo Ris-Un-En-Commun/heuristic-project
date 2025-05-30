@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Reservation } from '../../reservations/entities/reservation.entity';
+import { Reservation } from '../../parking/domain/model/reservation.entity';
 import { UserRole } from '../../common/enums/UserRole.enum';
 
 @Entity()
