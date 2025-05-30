@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Req, UseInterceptors} from '@nestjs/common';
 import {ReservationsService} from './reservations.service';
 import {CreateReservationDto} from './dto/create-reservation.dto';
 import {Reservation} from './entities/reservation.entity';
-import {RoleUserInterceptor} from 'src/common/interceptors/role-user.interceptor';
+import {RequestWithUser, RoleUserInterceptor} from 'src/common/interceptors/role-user.interceptor';
+import {UpdateReservationDto} from "./dto/update-reservation.dto";
 
 @Controller('reservations')
 @UseInterceptors(RoleUserInterceptor)
@@ -22,13 +23,13 @@ export class ReservationsController {
     }
 
     @Post()
-    async create(@Body() createReservationDto: CreateReservationDto): Promise<Reservation | Reservation[]> {
-        return this.reservationsService.create(createReservationDto);
+    async create(@Req() request: RequestWithUser, @Body() createReservationDto: CreateReservationDto): Promise<Reservation | Reservation[]> {
+        return this.reservationsService.create(createReservationDto, request.user.id);
 
     }
 
     @Put(':id')
-    async update(@Param('id') id: string, @Body() updateReservationDto: CreateReservationDto): Promise<Reservation> {
+    async update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto): Promise<Reservation> {
         return this.reservationsService.update(id, updateReservationDto);
     }
 

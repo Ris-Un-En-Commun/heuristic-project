@@ -33,8 +33,8 @@ export class ReservationsService {
   }
 
 
-async create(dto: CreateReservationDto): Promise<Reservation[]> {
-  const { userId, startDate, endDate, isElectric } = dto;
+async create(dto: CreateReservationDto, userId:string): Promise<Reservation[]> {
+  const {  startDate, endDate, isElectric } = dto;
 
   const user = await this.userRepository.findOne({
     where: { id: userId },
