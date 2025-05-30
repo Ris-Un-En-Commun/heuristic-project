@@ -7,6 +7,8 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { User } from '../users/entities/user.entity';
 import { ParkingSpot } from '../parking-spots/entities/parking-spot.entity';  
 import { addDays, format, isAfter, isToday, parseISO,isWeekend } from 'date-fns';
+import { ParkingSpotsService } from '../parking-spots/parking-spots.service';
+import { Inject } from '@nestjs/common';
 
 @Injectable()
 export class ReservationsService {
@@ -21,6 +23,13 @@ export class ReservationsService {
 
     @InjectRepository(ParkingSpot)
     private parkingSpotRepository: Repository<ParkingSpot>,
+    
+
+    @Inject(forwardRef(() => ParkingSpotsService)) 
+    private parkingSpotsService: ParkingSpotsService,
+
+    
+
   ) {}
 
 
@@ -33,41 +42,42 @@ export class ReservationsService {
 
 
   async create(dto: CreateReservationDto): Promise<Reservation[]> {
-    const { userId, parkingSpotId, startDate, endDate } = dto;
+  const { userId, startDate, endDate, isElectric } = dto;
 
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new NotFoundException(`Utilisateur avec id ${userId} non trouvé`);
-    }
-
-    const parkingSpot = await this.parkingSpotRepository.findOne({ where: { id: parkingSpotId } });
-    if (!parkingSpot) {
-      throw new NotFoundException(`Place de parking avec id ${parkingSpotId} non trouvée`);
-    }
-
-    const start = parseISO(startDate);
-    const end = parseISO(endDate);
-    const now = new Date();
-    const reservations: Reservation[] = [];
-
-    // créer une réservation pour chaque jour ouvrable
-    for (let current = start; !isAfter(current, end); current = addDays(current, 1)) {
-      if (isWeekend(current)) continue; 
-
-      const checkedIn = isToday(current) && now.getHours() >= 11;
-
-      const reservation = this.reservationRepo.create({
-        user,
-        parkingSpot,
-        date: format(current, 'yyyy-MM-dd'),
-        checkedIn,
-      });
-
-      reservations.push(reservation);
-    }
-
-    return this.reservationRepo.save(reservations);
+  const user = await this.userRepository.findOne({ where: { id: userId } });
+  if (!user) {
+    throw new NotFoundException(`Utilisateur avec id ${userId} non trouvé`);
   }
+
+  const start = parseISO(startDate);
+  const end = parseISO(endDate);
+  const now = new Date();
+  const reservations: Reservation[] = [];
+
+  for (let current = start; !isAfter(current, end); current = addDays(current, 1)) {
+    if (isWeekend(current)) continue;
+
+    const dateStr = format(current, 'yyyy-MM-dd');
+
+    const availableSpot = await this.parkingSpotsService.getAvailableSpotForDate(isElectric, dateStr);
+    if (!availableSpot) {
+      throw new Error(`Aucune place disponible pour le ${dateStr}`);
+    }
+
+    const checkedIn = isToday(current) && now.getHours() >= 11;
+
+    const reservation = this.reservationRepo.create({
+      user,
+      parkingSpot: availableSpot,
+      date: dateStr,
+      checkedIn,
+    });
+
+    reservations.push(reservation);
+  }
+
+  return this.reservationRepo.save(reservations);
+}
 
 
 

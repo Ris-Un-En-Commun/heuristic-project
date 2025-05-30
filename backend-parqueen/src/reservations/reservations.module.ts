@@ -9,8 +9,10 @@ import { ParkingSpotsModule } from 'src/parking-spots/parking-spots.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Reservation]),
             UsersModule,
-            forwardRef(()=> ParkingSpotsModule)], 
+            forwardRef(()=> ParkingSpotsModule),],
+             
   controllers: [ReservationsController],
-  providers: [ReservationsService]
+  providers: [ReservationsService],
+  exports: [ReservationsService, TypeOrmModule],
 })
 export class ReservationsModule {}

@@ -45,11 +45,11 @@ async checkAvailability(isElectric: boolean, startDate: string, endDate: string)
   }
 
   for (const date of dates) {
-      const reservationsCount = await this.reservationRepository
-        .createQueryBuilder('reservation')
-        .where(':date BETWEEN reservation.startDate AND reservation.endDate', { date })
-        .andWhere('reservation.parkingSpotId IN (:...spotIds)', { spotIds })
-        .getCount();
+    const reservationsCount = await this.reservationRepository
+      .createQueryBuilder('reservation')
+      .where('reservation.date = :date', { date })
+      .andWhere('reservation.parkingSpotId IN (:...spotIds)', { spotIds })
+      .getCount();
 
     if (reservationsCount >= allSpots.length) {
       return false;
@@ -58,6 +58,29 @@ async checkAvailability(isElectric: boolean, startDate: string, endDate: string)
 
   return true;
 }
+
+
+async getAvailableSpotForDate(isElectric: boolean, date: string): Promise<ParkingSpot | null> {
+  const allSpots = await this.parkingSpotRepository.find({
+    where: isElectric ? { isElectric: true } : {},
+    relations: ['reservations'],
+  });
+
+  for (const spot of allSpots) {
+    const hasReservation = await this.reservationRepository
+      .createQueryBuilder('reservation')
+      .where('reservation.parkingSpotId = :spotId', { spotId: spot.id })
+      .andWhere('reservation.date = :date', { date })
+      .getCount();
+
+    if (hasReservation === 0) {
+      return spot;
+    }
+  }
+
+  return null;
+}
+
 
 
 

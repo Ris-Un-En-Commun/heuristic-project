@@ -7,7 +7,8 @@ import { ReservationsModule } from '../reservations/reservations.module';
 import { Reservation } from '../reservations/entities/reservation.entity';
 
 @Module({
-  imports: [    TypeOrmModule.forFeature([ParkingSpot, Reservation]), 
+  imports: [    TypeOrmModule.forFeature([ParkingSpot, Reservation],), 
+    forwardRef(() => ReservationsModule)
 ], 
   controllers: [ParkingSpotsController],
   providers: [ParkingSpotsService],

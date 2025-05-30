@@ -5,10 +5,6 @@ export class CreateReservationDto {
   userId: string;
 
   @IsNotEmpty()
-  @IsString()
-  parkingSpotId: string;
-
-  @IsNotEmpty()
   @IsDateString()
   startDate: string;
 
