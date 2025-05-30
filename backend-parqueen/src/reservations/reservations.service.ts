@@ -61,7 +61,7 @@ export class ReservationsService {
 
     const availableSpot = await this.parkingSpotsService.getAvailableSpotForDate(isElectric, dateStr);
     if (!availableSpot) {
-      throw new Error(`Aucune place disponible pour le ${dateStr}`);
+      throw new NotFoundException(`Aucune place disponible pour le ${dateStr}`);
     }
 
     const checkedIn = isToday(current) && now.getHours() >= 11;
