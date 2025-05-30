@@ -1,6 +1,6 @@
 import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "./select.tsx";
 import {useRole} from "../../lib/contexts/authentication/RoleContext.tsx";
-import type {UserRole} from "../../api/setupAxiosClient.ts";
+import type {UserRole} from "../../api/authentication/setupAxiosClient.ts";
 
 const Header = () => {
     const {setRole, role} = useRole()

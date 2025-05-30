@@ -1,13 +1,13 @@
-import {Popover, PopoverContent, PopoverTrigger} from "../ui/popover.tsx";
-import {Button} from "../ui/button.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "../common/popover.tsx";
+import {Button} from "../common/button.tsx";
 import {BatteryCharging, CalendarIcon, Loader2} from "lucide-react";
 import {cn} from "../../lib/utils.ts";
-import {Calendar} from "../ui/calendar.tsx";
+import {Calendar} from "../common/calendar.tsx";
 import {format} from "date-fns"
 import type {DateRange} from "react-day-picker";
 import {useState} from "react";
 import {addDays} from "date-fns/addDays";
-import {Switch} from "../ui/switch.tsx";
+import {Switch} from "../common/switch.tsx";
 import {AxiosError} from "axios";
 import toast from "react-hot-toast";
 import {isAParkingSpotAvailable} from "../../api/parking-spots/api.ts";

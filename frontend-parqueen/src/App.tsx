@@ -1,9 +1,9 @@
 import './App.css'
-import Header from "./components/ui/Header.tsx";
+import Header from "./components/common/Header.tsx";
 import ReserveParkingSpot from "./components/reservation/reserve_parking_spot.tsx";
 import {Toaster} from "react-hot-toast";
 import {RoleProvider} from "./lib/contexts/authentication/RoleContext.tsx";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "./components/ui/tabs.tsx";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "./components/common/tabs.tsx";
 
 function App() {
     return (

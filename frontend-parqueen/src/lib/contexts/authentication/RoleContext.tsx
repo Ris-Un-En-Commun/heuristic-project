@@ -1,5 +1,5 @@
 import React, {createContext, type ReactNode, useContext, useEffect, useState,} from 'react';
-import {setupAxiosClient, type UserRole} from "../../../api/setupAxiosClient.ts";
+import {setupAxiosClient, type UserRole} from "../../../api/authentication/setupAxiosClient.ts";
 
 interface RoleContextType {
     role: UserRole;

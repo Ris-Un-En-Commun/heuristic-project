@@ -1,4 +1,4 @@
-import {setupAxiosClient, type UserRole} from "../../api/setupAxiosClient.ts";
+import {setupAxiosClient, type UserRole} from "../../api/authentication/setupAxiosClient.ts";
 import {
     Select,
     SelectContent,
@@ -7,7 +7,7 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue
-} from "../ui/select.tsx";
+} from "../common/select.tsx";
 
 const RoleSelect = () => {
     return (
