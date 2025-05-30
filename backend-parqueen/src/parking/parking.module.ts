@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ParkingSpotsController } from './presentation/parking-spots.controller';
-import { ParkingSpotsService } from './parking-spots/services/parking-spots.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ParkingSpot } from './domain/model/parking-spot.entity';
 import { Reservation } from './domain/model/reservation.entity';
@@ -9,26 +8,33 @@ import { ReservationRepo } from './infrastruture/reservation-repo';
 import { PARKING_SPOT_REPO, RESERVATION_REPO } from './infrastruture/tokens';
 import { CheckAvailability } from './application/check-availability.use-case';
 import { ReservationsController } from './presentation/reservations.controller';
-import { ReservationsService } from './reservations/services/reservations.service';
 import { CheckIn } from './application/check-in.use-case';
-import { User } from '../users/entities/user.entity';
 import { UsersModule } from '../users/users.module';
+import { DeleteReservationUseCase } from './application/delete-reservation.use-case';
+import { UpdateReservationUseCase } from './application/update-reservation.use-case';
+import { GetAllReservationsUseCase } from './application/get-all-reservations.use-case';
+import { CreateReservationUseCase } from './application/create-reservation.use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ParkingSpot, Reservation, User]),
+  imports: [TypeOrmModule.forFeature([ParkingSpot, Reservation]),
     UsersModule,
   ],
   controllers: [ParkingSpotsController, ReservationsController],
-  providers: [ParkingSpotsService, ReservationsService,
+  providers: [
     ParkingSpotRepo,
     ReservationRepo,
     { provide: PARKING_SPOT_REPO, useExisting: ParkingSpotRepo },
     { provide: RESERVATION_REPO, useExisting: ReservationRepo },
 
     /* Application-layer use-case */
-    CheckAvailability, CheckIn,
+    CheckAvailability,
+    CreateReservationUseCase,
+    GetAllReservationsUseCase,
+    UpdateReservationUseCase,
+    DeleteReservationUseCase,
+    CheckIn,
   ],
-  exports: [ParkingSpotsService, ReservationsService, TypeOrmModule],
+  exports: [TypeOrmModule],
 })
 export class ParkingModule {
 }

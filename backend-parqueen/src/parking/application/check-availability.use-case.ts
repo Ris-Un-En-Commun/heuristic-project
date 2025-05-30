@@ -15,8 +15,6 @@ export class CheckAvailability {
     }
 
     async execute(isElectric: boolean, start: string, end: string): Promise<boolean> {
-        console.log(end);
-        console.log(start);
         const spots = await this.parkingRepo.findAll(isElectric);
         if (spots.length === 0) return false;
 
