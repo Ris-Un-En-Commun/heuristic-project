@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common/decorators/core";
 import {IReservationRepository} from "../domain/ports/IReservationRepository";
 import {InjectRepository} from "@nestjs/typeorm/dist/common";
-import {Reservation} from "src/reservations/entities/reservation.entity";
+import {Reservation} from "src/parking/domain/model/reservation.entity";
 import {Repository} from "typeorm/repository/Repository";
 
 @Injectable()

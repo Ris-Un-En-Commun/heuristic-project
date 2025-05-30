@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { User } from '../users/entities/user.entity';
 import { ParkingSpot } from '../parking/domain/model/parking-spot.entity';
-import { Reservation } from '../reservations/entities/reservation.entity';
+import { Reservation } from '../parking/domain/model/reservation.entity';
 
 
 @Module({
