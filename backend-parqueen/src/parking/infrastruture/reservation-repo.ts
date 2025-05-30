@@ -18,4 +18,16 @@ export class ReservationRepo implements IReservationRepository {
             .andWhere('r.parkingSpotId IN (:...spotIds)', {spotIds})
             .getCount();
     }
+
+    async getUncheckedReservationOn(userId: string, date: Date): Promise<Reservation|null> {
+        return await this.repo.findOne({
+                where: {
+                    user: {id: userId},
+                    date: date.toISOString().slice(0, 10),     // e.g. '2024-06-01'
+                    checkedIn: false,
+                },
+                relations: ['parkingSpot'],
+            }
+        );
+    }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {forwardRef, Module} from '@nestjs/common';
 import { ParkingSpotsController } from './presentation/parking-spots.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ParkingSpot } from './domain/model/parking-spot.entity';
@@ -17,7 +17,7 @@ import { CreateReservationUseCase } from './application/create-reservation.use-c
 
 @Module({
   imports: [TypeOrmModule.forFeature([ParkingSpot, Reservation]),
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   controllers: [ParkingSpotsController, ReservationsController],
   providers: [
