@@ -1,8 +1,9 @@
 import {Button} from "../common/button";
-import {PencilLine, Trash2, Users} from "lucide-react";
+import {ChevronDown, ChevronUp, PencilLine, Trash2, Users} from "lucide-react";
 import {Pagination} from "../common/Pagination";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../common/table";
 import type {Reservation} from "../../api/reservations/dto/get-all-reservations.dto";
+import {useState} from "react";
 
 type Props = {
     reservations: Reservation[];
@@ -21,8 +22,14 @@ export const ReservationTable = ({
                                      onDeleteClick,
                                      onEditClick,
                                  }: Props) => {
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+    const sorted = [...reservations].sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
+    });
     const start = (currentPage - 1) * pageSize;
-    const paginated = reservations.slice(start, start + pageSize);
+    const paginated = sorted.slice(start, start + pageSize);
 
     return (
         <>
@@ -31,7 +38,17 @@ export const ReservationTable = ({
                     <TableRow>
                         <TableHead><Users className="inline mr-1"/> Utilisateur</TableHead>
                         <TableHead>Emplacement</TableHead>
-                        <TableHead>Date</TableHead>
+                        <TableHead
+                            className="cursor-pointer select-none"
+                            onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
+                        >
+                            Date
+                            {sortDirection === 'asc' ? (
+                                <ChevronUp className="inline w-4 h-4 ml-1"/>
+                            ) : (
+                                <ChevronDown className="inline w-4 h-4 ml-1"/>
+                            )}
+                        </TableHead>
                         <TableHead>Check-in</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
