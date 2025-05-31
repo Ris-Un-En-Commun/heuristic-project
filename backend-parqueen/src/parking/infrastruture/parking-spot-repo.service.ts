@@ -13,6 +13,10 @@ export class ParkingSpotRepo implements IParkingSpotRepository {
     ) {
     }
 
+    getAll(): Promise<ParkingSpot[]> {
+        return this.repo.find({order: {label: 'ASC'}});
+    }
+
     async findById(spotId: string): Promise<ParkingSpot | null> {
         return await this.repo.findOne({where: {id: spotId}});
     }

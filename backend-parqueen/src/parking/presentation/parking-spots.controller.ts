@@ -4,6 +4,7 @@ import {CheckAvailabilityQueryDto} from '../application/dto/check-availabilty-qu
 import {GetAvailableSpotsUseCase} from '../application/get-available-spots.use-case';
 import {UpdateAvailabilityDto} from "../application/dto/update-availabilty-dto";
 import {UpdateAvailibilityUseCase} from "../application/update-availibility.use-case";
+import {GetAllSpotsUseCase} from "../application/get-all-spots.use-case";
 
 @Controller('parking-spots')
 export class ParkingSpotsController {
@@ -12,6 +13,7 @@ export class ParkingSpotsController {
         private readonly checkAvailability: CheckAvailability,
         private readonly getAvailableSpotsUseCase: GetAvailableSpotsUseCase,
         private readonly updateAvailabilityUseCase: UpdateAvailibilityUseCase,
+        private readonly getAllParkingSpotsUseCase: GetAllSpotsUseCase,
     ) {
     }
 
@@ -42,5 +44,10 @@ export class ParkingSpotsController {
     async updateParkingSpot(@Body() body: UpdateAvailabilityDto, @Param('id') id:string) {
         const {isAvailable} = body;
         return await this.updateAvailabilityUseCase.execute(id, isAvailable);
+    }
+
+    @Get('all')
+    async getAllParkingSpots() {
+        return await this.getAllParkingSpotsUseCase.execute();
     }
 }

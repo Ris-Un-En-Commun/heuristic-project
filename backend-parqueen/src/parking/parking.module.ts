@@ -19,6 +19,7 @@ import {GetDashboardStatsUseCase} from './application/get-dashboard-stats.use-ca
 import {GetAvailableSpotsUseCase} from './application/get-available-spots.use-case';
 import {GetUsersReservationsHistoryUseCase} from './application/get-user-reservations-history.use-case';
 import {UpdateAvailibilityUseCase} from "./application/update-availibility.use-case";
+import {GetAllSpotsUseCase} from "./application/get-all-spots.use-case";
 
 @Module({
   imports: [TypeOrmModule.forFeature([ParkingSpot, Reservation]),
@@ -34,6 +35,7 @@ import {UpdateAvailibilityUseCase} from "./application/update-availibility.use-c
 
     /* Application-layer use-case */
     CheckAvailability,
+    GetAllSpotsUseCase,
     UpdateAvailibilityUseCase,
     CreateReservationUseCase,
     GetAllReservationsUseCase,

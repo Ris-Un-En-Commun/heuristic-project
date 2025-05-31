@@ -1,5 +1,4 @@
-
-import { ParkingSpot } from "../model/parking-spot.entity";
+import {ParkingSpot} from "../model/parking-spot.entity";
 
 export interface IParkingSpotRepository {
     findAllAvailable(isElectric?: boolean): Promise<ParkingSpot[]>;
@@ -8,4 +7,5 @@ export interface IParkingSpotRepository {
     countAll(): Promise<number>;
     countElectricSpots(): Promise<number>;
     countOccupiedToday(): Promise<number>;
+    getAll(): Promise<ParkingSpot[]>;
 }
