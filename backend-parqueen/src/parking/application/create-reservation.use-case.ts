@@ -130,8 +130,8 @@ for (let current = start; !isAfter(current, end); current = addDays(current, 1))
       .select('r.parkingSpotId')
       .where('r.date = :date', { date });
 
-    if (isToday && after11am) {
-      query.andWhere('r.checkedIn = true');
+    if (!(isToday && after11am)) {
+      query.andWhere('r.checkedIn = false');
     }
 
     const reservedSpotIds = await query.getRawMany();

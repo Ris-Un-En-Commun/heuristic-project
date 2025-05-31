@@ -26,7 +26,7 @@ export class ReservationRepo implements IReservationRepository {
       .where('r.date = :date', { date })
       .andWhere('r.parkingSpotId IN (:...spotIds)', { spotIds });
 
-    if (isToday && isAfter11AM) {
+    if (!(isToday && isAfter11AM)) {
       query.andWhere('r.checkedIn = true');
     }
 
