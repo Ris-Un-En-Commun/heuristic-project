@@ -3,7 +3,6 @@ import {PencilLine, Trash2, Users} from "lucide-react";
 import {Pagination} from "../common/Pagination";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../common/table";
 import type {Reservation} from "../../api/reservations/dto/get-all-reservations.dto";
-import {toast} from "react-hot-toast";
 
 type Props = {
     reservations: Reservation[];
@@ -11,6 +10,7 @@ type Props = {
     pageSize: number;
     onPageChange: (page: number) => void;
     onDeleteClick: (reservation: Reservation) => void;
+    onEditClick: (reservation: Reservation) => void;
 };
 
 export const ReservationTable = ({
@@ -18,7 +18,8 @@ export const ReservationTable = ({
                                      currentPage,
                                      pageSize,
                                      onPageChange,
-                                     onDeleteClick
+                                     onDeleteClick,
+                                     onEditClick,
                                  }: Props) => {
     const start = (currentPage - 1) * pageSize;
     const paginated = reservations.slice(start, start + pageSize);
@@ -53,7 +54,7 @@ export const ReservationTable = ({
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => toast("Fonction d'édition à venir")}
+                                        onClick={() => onEditClick(r)}
                                     >
                                         <PencilLine className="size-4 mr-1"/> Modifier
                                     </Button>

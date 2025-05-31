@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
-import {Button} from "../common/button";
 import {toast} from "react-hot-toast";
-import {AlertTriangle, X} from "lucide-react";
 import {deleteReservation, getAllReservations} from "../../api/reservations/api";
 import {Input} from "../common/input";
 import type {Reservation} from "../../api/reservations/dto/get-all-reservations.dto";
 import {ReservationTable} from "./ReservationTable.tsx";
+import {EditReservationModal} from "./EditReservationModal";
+import {DeleteReservationModal} from "./DeleteReservationModal.tsx";
 
 const PAGE_SIZE = 15;
 
@@ -17,6 +17,7 @@ const BackOffice = () => {
     const [loading, setLoading] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [reservationToDelete, setReservationToDelete] = useState<Reservation | null>(null);
+    const [reservationToEdit, setReservationToEdit] = useState<Reservation | null>(null);
 
     useEffect(() => {
         loadReservations().then();
@@ -99,62 +100,24 @@ const BackOffice = () => {
                     pageSize={PAGE_SIZE}
                     onPageChange={setCurrentPage}
                     onDeleteClick={openDeleteModal}
+                    onEditClick={(r) => setReservationToEdit(r)}
                 />
             )}
 
-            {/* Modal de confirmation de suppression */}
+            {reservationToEdit && (
+                <EditReservationModal
+                    reservation={reservationToEdit}
+                    onClose={() => setReservationToEdit(null)}
+                    onUpdated={loadReservations}
+                />
+            )}
+
             {showDeleteModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                                <AlertTriangle className="h-6 w-6 text-red-500"/>
-                                <h2 className="text-lg font-semibold text-gray-900">
-                                    Confirmer la suppression
-                                </h2>
-                            </div>
-                            <button
-                                onClick={closeDeleteModal}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
-                            >
-                                <X className="h-5 w-5"/>
-                            </button>
-                        </div>
-
-                        <div className="mb-6">
-                            <p className="text-gray-600 mb-4">
-                                Êtes-vous sûr de vouloir supprimer cette réservation ?
-                            </p>
-
-                            {reservationToDelete && (
-                                <div className="bg-gray-50 rounded-md p-3 space-y-1 text-sm">
-                                    <div><strong>Utilisateur :</strong> {reservationToDelete.user.name}</div>
-                                    <div><strong>Emplacement :</strong> {reservationToDelete.parkingSpot.label}</div>
-                                    <div><strong>Date :</strong> {reservationToDelete.date}</div>
-                                </div>
-                            )}
-
-                            <p className="text-red-600 text-sm mt-3">
-                                Cette action est irréversible.
-                            </p>
-                        </div>
-
-                        <div className="flex gap-3 justify-end">
-                            <Button
-                                variant="outline"
-                                onClick={closeDeleteModal}
-                            >
-                                Annuler
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                onClick={confirmDelete}
-                            >
-                                Supprimer
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                <DeleteReservationModal
+                    reservation={reservationToDelete}
+                    onClose={closeDeleteModal}
+                    onConfirm={confirmDelete}
+                />
             )}
         </div>
     );
