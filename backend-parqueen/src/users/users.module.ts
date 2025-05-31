@@ -7,6 +7,7 @@ import {ParkingModule} from "../parking/parking.module";
 import {RESERVATION_REPO} from "../parking/infrastruture/tokens";
 import {ReservationRepo} from "../parking/infrastruture/reservation-repo";
 import {GetReservationForCheckInUseCase} from "../parking/application/get-reservation-for-check-in-use-case";
+import {GetAllReservationsUseCase} from "../parking/application/get-all-reservations.use-case";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), forwardRef(() => ParkingModule)],
@@ -16,7 +17,8 @@ import {GetReservationForCheckInUseCase} from "../parking/application/get-reserv
       ReservationRepo,
       { provide: RESERVATION_REPO, useExisting: ReservationRepo },
 
-      GetReservationForCheckInUseCase
+      GetReservationForCheckInUseCase,
+      GetAllReservationsUseCase,
   ],
   exports: [UsersService, TypeOrmModule], 
 })

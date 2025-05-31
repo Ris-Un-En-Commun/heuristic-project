@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import {Reservation} from "../parking/domain/model/reservation.entity";
 import {GetReservationForCheckInUseCase} from "../parking/application/get-reservation-for-check-in-use-case";
 import {RoleUserInterceptor} from "../common/interceptors/role-user.interceptor";
+import {GetAllReservationsUseCase} from "../parking/application/get-all-reservations.use-case";
 
 @Controller('users')
 @UseInterceptors(RoleUserInterceptor)
@@ -13,6 +14,7 @@ export class UsersController {
   constructor(
       private readonly usersService: UsersService,
       private readonly checkInUseCase: GetReservationForCheckInUseCase,
+      private readonly allReservationsUseCase: GetAllReservationsUseCase,
   ) {}
 
   @Get('Test')
@@ -34,5 +36,15 @@ export class UsersController {
     }
 
     return reservation;
+  }
+
+  @Get('/reservations')
+  async getAllReservations(@Req() request: Request): Promise<Reservation[]> {
+    if (! request['user']?.id) {
+      return [];
+    }
+
+    return this.allReservationsUseCase
+        .execute(request['user']?.id);
   }
 }

@@ -11,7 +11,14 @@ export class GetAllReservationsUseCase {
   ) {
   }
 
-  async execute(): Promise<Reservation[]> {
+  async execute(userId: string|null = null): Promise<Reservation[]> {
+    if (userId) {
+      return this.reservationRepo.find({
+        where: {user: {id: userId }},
+        relations: ['user', 'parkingSpot'],
+      });
+    }
+
     return this.reservationRepo.find({
       relations: ['user', 'parkingSpot'],
     });
