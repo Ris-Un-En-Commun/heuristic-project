@@ -14,17 +14,20 @@ import { DeleteReservationUseCase } from './application/delete-reservation.use-c
 import { UpdateReservationUseCase } from './application/update-reservation.use-case';
 import { GetAllReservationsUseCase } from './application/get-all-reservations.use-case';
 import { CreateReservationUseCase } from './application/create-reservation.use-case';
+import { DashboardController } from './presentation/dashboard.controller';
+import { GetDashboardStatsUseCase } from './application/get-dashboard-stats.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ParkingSpot, Reservation]),
     UsersModule,
   ],
-  controllers: [ParkingSpotsController, ReservationsController],
+  controllers: [ParkingSpotsController, ReservationsController,DashboardController],
   providers: [
     ParkingSpotRepo,
     ReservationRepo,
     { provide: PARKING_SPOT_REPO, useExisting: ParkingSpotRepo },
     { provide: RESERVATION_REPO, useExisting: ReservationRepo },
+    
 
     /* Application-layer use-case */
     CheckAvailability,
@@ -33,6 +36,7 @@ import { CreateReservationUseCase } from './application/create-reservation.use-c
     UpdateReservationUseCase,
     DeleteReservationUseCase,
     CheckIn,
+    GetDashboardStatsUseCase,
   ],
   exports: [TypeOrmModule],
 })
