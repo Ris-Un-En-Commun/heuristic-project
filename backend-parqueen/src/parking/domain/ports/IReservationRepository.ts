@@ -1,4 +1,5 @@
 import {Reservation} from "../model/reservation.entity";
+import { ParkingSpot } from '../model/parking-spot.entity';
 
 export interface IReservationRepository {
     countAll(): Promise<number>;
@@ -10,6 +11,6 @@ export interface IReservationRepository {
     countNoShowBetweenDates(startDate: string, endDate: string): Promise<number>;
     countUniqueUsersBetweenDates(startDate: string, endDate: string): Promise<number>;
     countCheckedInBetweenDates(startDate: string, endDate: string): Promise<number>
-
+    findReservedSpotsOnDate(date: Date): Promise<ParkingSpot[]>;
 
 }

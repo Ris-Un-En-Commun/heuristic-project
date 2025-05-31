@@ -1,40 +1,40 @@
-import { Injectable } from "@nestjs/common";
-import { IReservationRepository } from "../domain/ports/IReservationRepository";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Reservation } from "src/parking/domain/model/reservation.entity";
-import { Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { IReservationRepository } from '../domain/ports/IReservationRepository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Reservation } from 'src/parking/domain/model/reservation.entity';
+import { Repository } from 'typeorm';
+import { ParkingSpot } from '../domain/model/parking-spot.entity';
 
 @Injectable()
 export class ReservationRepo implements IReservationRepository {
-    constructor(
-        @InjectRepository(Reservation) private repo: Repository<Reservation>,
-    ) {
-    }
-    async countAll(): Promise<number> {
+  constructor(
+    @InjectRepository(Reservation) private repo: Repository<Reservation>,
+  ) {
+  }
+
+  async countAll(): Promise<number> {
     return this.repo.count();
   }
 
-    async countForDate(date: string, spotIds: string[]): Promise<number> {
-        const now = new Date();
-        const isToday = date === now.toISOString().slice(0, 10);
-        const isAfter11AM = now.getHours() >= 11;
+  async countForDate(date: string, spotIds: string[]): Promise<number> {
+    const now = new Date();
+    const isToday = date === now.toISOString().slice(0, 10);
+    const isAfter11AM = now.getHours() >= 11;
 
-        const query = this.repo
-            .createQueryBuilder('r')
-            .where('r.date = :date', { date })
-            .andWhere('r.parkingSpotId IN (:...spotIds)', { spotIds });
+    const query = this.repo
+      .createQueryBuilder('r')
+      .where('r.date = :date', { date })
+      .andWhere('r.parkingSpotId IN (:...spotIds)', { spotIds });
 
-        if (isToday && isAfter11AM) {
-            query.andWhere('r.checkedIn = true');
-        }
+    if (isToday && isAfter11AM) {
+      query.andWhere('r.checkedIn = true');
+    }
 
     return await query.getCount();
-}
+  }
 
 
-
-
-    async countByDate(date: string): Promise<number> {
+  async countByDate(date: string): Promise<number> {
     return this.repo.count({ where: { date } });
   }
 
@@ -44,15 +44,14 @@ export class ReservationRepo implements IReservationRepository {
   }
 
 
-
   async countReservationsBetweenDates(startDate: string, endDate: string): Promise<number> {
     return this.repo
       .createQueryBuilder('r')
       .where('r.date BETWEEN :startDate AND :endDate', { startDate, endDate })
       .getCount();
   }
-  
-  
+
+
   async countNoShowBetweenDates(startDate: string, endDate: string): Promise<number> {
     return this.repo
       .createQueryBuilder('r')
@@ -70,24 +69,37 @@ export class ReservationRepo implements IReservationRepository {
 
     return parseInt(result.count, 10);
   }
-async countCheckedInBetweenDates(startDate: string, endDate: string): Promise<number> {
-  return this.repo
-    .createQueryBuilder('r')
-    .where('r.date BETWEEN :startDate AND :endDate', { startDate, endDate })
-    .andWhere('r.checkedIn = true')
-    .getCount();
-}
+
+  async countCheckedInBetweenDates(startDate: string, endDate: string): Promise<number> {
+    return this.repo
+      .createQueryBuilder('r')
+      .where('r.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('r.checkedIn = true')
+      .getCount();
+  }
 
 
-    async getUncheckedReservationOn(userId: string, date: Date): Promise<Reservation|null> {
-        return await this.repo.findOne({
-                where: {
-                    user: {id: userId},
-                    date: date.toISOString().slice(0, 10),     // e.g. '2024-06-01'
-                    checkedIn: false,
-                },
-                relations: ['parkingSpot'],
-            }
-        );
-    }
+  async getUncheckedReservationOn(userId: string, date: Date): Promise<Reservation | null> {
+    return await this.repo.findOne({
+        where: {
+          user: { id: userId },
+          date: date.toISOString().slice(0, 10),     // e.g. '2024-06-01'
+          checkedIn: false,
+        },
+        relations: ['parkingSpot'],
+      },
+    );
+  }
+
+  async findReservedSpotsOnDate(date: Date): Promise<ParkingSpot[]> {
+    const reservations = await this.repo.find({
+      where: {
+        date: date.toISOString().split('T')[0],
+      },
+      relations: ['parkingSpot'],
+    });
+
+    return reservations.map(r => r.parkingSpot);
+  }
+
 }
