@@ -12,6 +12,9 @@ export class ParkingSpot {
   @Column({ default: false })
   isElectric: boolean;
 
+  @Column({ default: true })
+  isAvailable: boolean;
+
   @OneToMany(() => Reservation, reservation => reservation.parkingSpot)
   reservations: Reservation[];
 }

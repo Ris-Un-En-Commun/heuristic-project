@@ -15,7 +15,7 @@ export class GetAvailableSpotsUseCase {
   }
 
   async execute(date: Date) {
-    const allSpots = await this.parkingRepo.findAll();
+    const allSpots = await this.parkingRepo.findAllAvailable();
 
     const reservedSpots = await this.reservationRepo.findReservedSpotsOnDate(date);
 

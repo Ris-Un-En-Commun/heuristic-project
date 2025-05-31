@@ -15,7 +15,7 @@ export class CheckAvailability {
     }
 
     async execute(isElectric: boolean, start: string, end: string): Promise<boolean> {
-        const spots = await this.parkingRepo.findAll(isElectric);
+        const spots = await this.parkingRepo.findAllAvailable(isElectric);
         if (spots.length === 0) return false;
 
         const spotIds = spots.map(s => s.id);

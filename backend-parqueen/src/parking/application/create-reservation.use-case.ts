@@ -119,7 +119,7 @@ for (let current = start; !isAfter(current, end); current = addDays(current, 1))
   }
 
   private async getAvailableSpotForDate(isElectric: boolean, date: string): Promise<ParkingSpot | null> {
-    const spots = await this.parkingSpotRepo.findAll(isElectric);
+    const spots = await this.parkingSpotRepo.findAllAvailable(isElectric);
 
     const now = new Date();
     const isToday = format(now, 'yyyy-MM-dd') === date;
