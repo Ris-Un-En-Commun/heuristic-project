@@ -9,7 +9,7 @@ const Header = () => {
     return (
         <header className="flex justify-center items-center bg-blue-500 py-2">
             <CheckInButton role={role}></CheckInButton>
-            <h1 className="font-bold text-white text-3xl">Réservation de Parking</h1>
+            <h1 className="font-bold text-white text-3xl">Parqueen</h1>
             <div className="justify-self-end">
                 <Select value={role} onValueChange={async function (value) {
                     setRole(value as UserRole);

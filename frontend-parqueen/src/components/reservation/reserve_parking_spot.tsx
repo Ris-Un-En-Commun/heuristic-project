@@ -47,8 +47,8 @@ const ReserveParkingSpot = () => {
             await bookParkingSpot(date, isElectric)
             toast.success('Place de parking réservée pour la période sélectionnée.')
         } catch (e: unknown) {
-            if (e instanceof AxiosError && e.status === 404) {
-                toast.error('Aucune place de parking disponible correspondant à vos critères.')
+            if (e instanceof AxiosError && (e.status === 404 || e.status === 400)) {
+                toast.error(e.response?.data.message);
             } else {
                 console.error("Unexpected error:", e);
                 toast.error('Une erreur est survenue lors de la vérification de la disponibilité.')
