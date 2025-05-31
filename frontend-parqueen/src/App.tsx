@@ -6,7 +6,6 @@ import {RoleProvider, useRole} from "./lib/contexts/authentication/RoleContext.t
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "./components/common/tabs.tsx";
 import BackOffice from "./components/admin/BackOffice.tsx";
 import Dashboard from "./components/dashboard/Dashboard.tsx";
-import ReservationsList from "./components/reservation/reservations_list.tsx";
 
 function InnerApp() {
     const {role} = useRole();
@@ -36,7 +35,7 @@ function InnerApp() {
                     <TabsContent value="booking">
                         <ReserveParkingSpot/>
                     </TabsContent>
-                        <ReservationsList role={role}/>
+
                     <TabsContent value="my-reservations">
 
                     </TabsContent>

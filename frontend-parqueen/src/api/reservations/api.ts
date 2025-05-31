@@ -21,10 +21,6 @@ export function getAllReservations() {
     return axios.get<GetAllReservationsDto>("/reservations");
 }
 
-export function getUserReservations() {
-    return axios.get<GetAllReservationsDto>("users/reservations");
-}
-
 export async function deleteReservation(id: string) {
     return axios.delete(`/reservations/${id}`);
 }
