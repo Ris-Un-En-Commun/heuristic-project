@@ -8,6 +8,9 @@ import { CreateReservationUseCase } from '../application/create-reservation.use-
 import { GetAllReservationsUseCase } from '../application/get-all-reservations.use-case';
 import { UpdateReservationUseCase } from '../application/update-reservation.use-case';
 import { DeleteReservationUseCase } from '../application/delete-reservation.use-case';
+import { GetUserReservationsHistoryDto } from '../application/dto/get-user-reservations-history.dto';
+import { GetUsersReservationsHistoryUseCase } from '../application/get-user-reservations-history.use-case';
+
 
 @Controller('reservations')
 @UseInterceptors(RoleUserInterceptor)
@@ -18,6 +21,7 @@ export class ReservationsController {
     private readonly updateReservationUseCase: UpdateReservationUseCase,
     private readonly deleteReservationUseCase: DeleteReservationUseCase,
     private readonly checkInUseCase: CheckIn,
+    private readonly getUsersReservationsHistoryUseCase: GetUsersReservationsHistoryUseCase,
   ) {
   }
 
@@ -47,5 +51,12 @@ export class ReservationsController {
   async checkIn(@Param('id') id: string): Promise<{ message: string; reservation: Reservation }> {
     return this.checkInUseCase.execute(id);
   }
+
+  @Get('/reservationsHistory')
+  async getUsersReservationsHistory(@Req() request: RequestWithUser): Promise<GetUserReservationsHistoryDto>
+  {
+    return this.getUsersReservationsHistoryUseCase.execute(request.user.id);
+  }
+
 }
 

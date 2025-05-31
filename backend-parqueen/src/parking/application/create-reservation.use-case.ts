@@ -8,6 +8,7 @@ import { ParkingSpot } from '../domain/model/parking-spot.entity';
 import { addDays, format, isAfter, isToday, isWeekend, parseISO } from 'date-fns';
 import { PARKING_SPOT_REPO } from '../infrastruture/tokens';
 import { IParkingSpotRepository } from '../domain/ports/IParkingSpotRepository';
+import { UserRole } from 'src/common/enums/UserRole.enum';
 
 
 @Injectable()
@@ -56,12 +57,15 @@ export class CreateReservationUseCase {
 
     // Découpage des dates
     const newReservationDates: string[] = [];
-    for (let current = start; !isAfter(current, end); current = addDays(current, 1)) {
-      if (!isWeekend(current)) {
-        newReservationDates.push(format(current, 'yyyy-MM-dd'));
-      }
-    }
 
+for (let current = start; !isAfter(current, end); current = addDays(current, 1)) {
+  const isWeekendDay = isWeekend(current);
+  if (isWeekendDay && user.role === UserRole.USER)  {
+    continue;
+  }
+
+  newReservationDates.push(format(current, 'yyyy-MM-dd'));
+}
     const totalRequest = newReservationDates.length;
     const restingQuota = maxAllowed - existingFutureReservations;
 

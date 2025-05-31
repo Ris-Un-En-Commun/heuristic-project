@@ -17,6 +17,7 @@ import { CreateReservationUseCase } from './application/create-reservation.use-c
 import { DashboardController } from './presentation/dashboard.controller';
 import { GetDashboardStatsUseCase } from './application/get-dashboard-stats.use-case';
 import { GetAvailableSpotsUseCase } from './application/get-available-spots.use-case';
+import { GetUsersReservationsHistoryUseCase } from './application/get-user-reservations-history.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ParkingSpot, Reservation]),
@@ -38,7 +39,8 @@ import { GetAvailableSpotsUseCase } from './application/get-available-spots.use-
     DeleteReservationUseCase,
     CheckIn,
     GetDashboardStatsUseCase,
-    GetAvailableSpotsUseCase
+    GetAvailableSpotsUseCase,
+    GetUsersReservationsHistoryUseCase
   ],
   exports: [TypeOrmModule],
 })
