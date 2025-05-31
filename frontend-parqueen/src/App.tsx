@@ -5,6 +5,7 @@ import {Toaster} from "react-hot-toast";
 import {RoleProvider, useRole} from "./lib/contexts/authentication/RoleContext.tsx";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "./components/common/tabs.tsx";
 import BackOffice from "./components/admin/BackOffice.tsx";
+import UserReservations from './components/reservation/use_reservations.tsx';
 import Dashboard from "./components/dashboard/Dashboard.tsx";
 
 function InnerApp() {
@@ -37,7 +38,7 @@ function InnerApp() {
                     </TabsContent>
 
                     <TabsContent value="my-reservations">
-
+                         <UserReservations />
                     </TabsContent>
                     {role !== 'user' && (
                         <TabsContent value="dashboard">
