@@ -13,13 +13,23 @@ export class ReservationRepo implements IReservationRepository {
     async countAll(): Promise<number> {
     return this.repo.count();
   }
+
     async countForDate(date: string, spotIds: string[]): Promise<number> {
-        return await this.repo
+        const now = new Date();
+        const isToday = date === now.toISOString().slice(0, 10);
+        const isAfter11AM = now.getHours() >= 11;
+
+        const query = this.repo
             .createQueryBuilder('r')
-            .where('r.date = :date', {date})
-            .andWhere('r.parkingSpotId IN (:...spotIds)', {spotIds})
-            .getCount();
-    }
+            .where('r.date = :date', { date })
+            .andWhere('r.parkingSpotId IN (:...spotIds)', { spotIds });
+
+        if (isToday && isAfter11AM) {
+            query.andWhere('r.checkedIn = true');
+        }
+
+    return await query.getCount();
+}
 
 
 

@@ -9,6 +9,7 @@ import { addDays, format, isAfter, isToday, isWeekend, parseISO } from 'date-fns
 import { PARKING_SPOT_REPO } from '../infrastruture/tokens';
 import { IParkingSpotRepository } from '../domain/ports/IParkingSpotRepository';
 
+
 @Injectable()
 export class CreateReservationUseCase {
   constructor(
@@ -116,14 +117,23 @@ export class CreateReservationUseCase {
   private async getAvailableSpotForDate(isElectric: boolean, date: string): Promise<ParkingSpot | null> {
     const spots = await this.parkingSpotRepo.findAll(isElectric);
 
-    const reservedSpotIds = await this.reservationRepo
+    const now = new Date();
+    const isToday = format(now, 'yyyy-MM-dd') === date;
+    const after11am = now.getHours() >= 11;
+
+    const query = this.reservationRepo
       .createQueryBuilder('r')
       .select('r.parkingSpotId')
-      .where('r.date = :date', { date })
-      .getRawMany();
+      .where('r.date = :date', { date });
 
+    if (isToday && after11am) {
+      query.andWhere('r.checkedIn = true');
+    }
+
+    const reservedSpotIds = await query.getRawMany();
     const reservedIds = reservedSpotIds.map(r => r.r_parkingSpotId);
 
     return spots.find(spot => !reservedIds.includes(spot.id)) || null;
   }
+
 }
