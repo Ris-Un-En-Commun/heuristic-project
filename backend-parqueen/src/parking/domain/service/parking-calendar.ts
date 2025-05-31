@@ -2,8 +2,6 @@ import {addDays, format, getDay, isBefore} from 'date-fns';
 
 export class ParkingCalendar {
     static workingDaysBetween(start: Date, end: Date): string[] {
-        console.log(end);
-        console.log(start);
         const days: string[] = [];
         let current = start;
         while (!isBefore(end, current)) {

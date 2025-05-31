@@ -4,11 +4,12 @@ import { Repository } from 'typeorm';
 import { Reservation } from '../domain/model/reservation.entity';
 import { format, isToday, parseISO } from 'date-fns';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {InjectRepository} from "@nestjs/typeorm";
 
 @Injectable()
 export class CheckIn {
   constructor(
-    @Inject(RESERVATION_REPO)
+    @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
   ) {
   }

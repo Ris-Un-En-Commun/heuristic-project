@@ -21,17 +21,7 @@ export class ReservationRepo implements IReservationRepository {
             .getCount();
     }
 
-    async getUncheckedReservationOn(userId: string, date: Date): Promise<Reservation|null> {
-        return await this.repo.findOne({
-                where: {
-                    user: {id: userId},
-                    date: date.toISOString().slice(0, 10),    
-                    checkedIn: false,
-                },
-                relations: ['parkingSpot'],
-            }
-        );
-    }
+
 
 
     async countByDate(date: string): Promise<number> {
@@ -78,4 +68,16 @@ async countCheckedInBetweenDates(startDate: string, endDate: string): Promise<nu
     .getCount();
 }
 
+
+    async getUncheckedReservationOn(userId: string, date: Date): Promise<Reservation|null> {
+        return await this.repo.findOne({
+                where: {
+                    user: {id: userId},
+                    date: date.toISOString().slice(0, 10),     // e.g. '2024-06-01'
+                    checkedIn: false,
+                },
+                relations: ['parkingSpot'],
+            }
+        );
+    }
 }
